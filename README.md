@@ -18,3 +18,21 @@ Then, just type
 
 ## Usage
 Just type ```g8``` followed by the URL of the file you want to download. It will be downloaded in the current directory.
+
+You can specify a path to where you want to download the file. See the following examples.
+
+## Examples
+```g8 https://www.python.org/ftp/python/3.11.1/python-3.11.1-macos11.pkg```
+
+```g8 https://www.python.org/ftp/python/3.11.1/python-3.11.1-macos11.pkg .```
+
+```g8 https://www.python.org/ftp/python/3.11.1/python-3.11.1-macos11.pkg ..```
+
+```g8 https://www.python.org/ftp/python/3.11.1/python-3.11.1-macos11.pkg /home/user/Downloads```
+
+```g8 https://www.python.org/ftp/python/3.11.1/python-3.11.1-macos11.pkg file.extension```
+
+```g8 https://www.python.org/ftp/python/3.11.1/python-3.11.1-macos11.pkg /home/user/Downloads/file.extension```
+
+## Help
+```g8 -h```
