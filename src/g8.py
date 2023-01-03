@@ -6,6 +6,7 @@
 # Built-in
 import sys
 import os
+import argparse
 
 # 3rd party
 import requests
@@ -30,16 +31,27 @@ class g8():
         It downloads a file from a given URL and displays a progress status while doing so
         The URL is the first argument
 
-        .. warning:: URL must start with http:// or https://, if you want to use http://, add the argument --allow-http
         """
 
-        if len(sys.argv) > 1:
-            url = sys.argv[1]
+        parser = argparse.ArgumentParser()
+        parser.add_argument('url', type=str, help='URL to download from')
+        parser.add_argument('outputpath', type=str, help='Output location and filename', default='.', nargs='?')
+        parser.add_argument('-a', type=str, required=False, help='Valid argument is: allow-http')
+        args = parser.parse_args()
+
+        url = args.url
+        path = args.outputpath
+        if path.endswith('/') and path != '.':
+            fileName = path + url.split('/')[-1]
+        elif path == '.':
+            fileName = url.split('/')[-1]
+        elif path == '..':
+            fileName = '../' + url.split('/')[-1]
         else:
-            rprint('[bold red]Missing URL :(')
-            sys.exit(1)
+            fileName = path
 
         progress = Progress(
+            "⥊",
             TextColumn("[bold #4f54a3][i]{task.fields[filename]}"),
             "⥊",
             "[progress.percentage][magenta]{task.percentage:>3.1f}%",
@@ -55,8 +67,8 @@ class g8():
             rprint('[bold red]Invalid URL :(')
             sys.exit(1)
 
-        if url.startswith('http://') and '--allow-http' not in sys.argv:
-            rprint('[bold #FFA500]HTTP is not safe, add the argument --allow-http')
+        if url.startswith('http://') and args.a != 'allow-http':
+            rprint('[bold #FFA500]HTTP is not safe, add the optionnal argument -a allow-http')
             sys.exit(1)
 
         with progress:
@@ -66,11 +78,9 @@ class g8():
                 rprint('[bold red]No content found :(')
                 sys.exit(1)
 
-            fileName = url.split('/')[-1]
-
             taskId = progress.add_task(
                 description='Download',
-                filename=f'~/{fileName}',
+                filename=f'{fileName}',
                 total=int(totalLength),
                 start=True,
             )
@@ -88,6 +98,7 @@ class g8():
             rprint(f'[bold green]! {fileName} downloaded successfully !')
 
             sys.exit(0)
+
 
 # To run the script directly
 if __name__ == "__main__":
